@@ -23,9 +23,11 @@
 
 #define TIME_TO_SLEEP 15                 //Time ESP32 will go to sleep (in minuts) between each reading
 String apiKey = "xxxxx";     //Enter your Write API key from ThingSpeak
-String IFTTkey = "xxxx"; // Enter your IFTTT Key
-String IFTTEventNm = "xxx";      //Enter the IFTTT event name
+String IFTTTkey = "xxxx"; // Enter your IFTTT Key
+String IFTTTLowMoistNm = "xxx";      //Enter the IFTTT event name for low moisture
+String IFTTTLowBattNm = "xxx";      //Enter the IFTTT event name for low battery
 int LowMoistVal = 35;                   //Low moisture value to trigger IFTTT Notification
+int LowBatVal = 3200;                   //Low battery Voltage (mV)
 #define WIFI_SSID "xxxx"       //WiFi SSID
 #define WIFI_PASSWD "xxx"     //WiFi Password
 
@@ -162,7 +164,7 @@ if (WiFi.status() == WL_CONNECTED) {
   uint32_t salt = readSalt();
   uint16_t soil = readSoil();
   if (soil <= LowMoistVal){
-     http.begin(String("https://maker.ifttt.com/trigger/") + IFTTEventNm + "/with/key/" + IFTTkey ); 
+     http.begin(String("https://maker.ifttt.com/trigger/") + IFTTTLowMoistNm + "/with/key/" + IFTTTkey ); 
      http.end(); //Free the resources
   }
   sensor.startConversion(); //light sensor
@@ -174,6 +176,10 @@ if (WiFi.status() == WL_CONNECTED) {
     bat+=readBattery();
   }
   bat=bat/3;
+  if (bat <= LowBatVal){
+     http.begin(String("https://maker.ifttt.com/trigger/") + IFTTTLowBattNm + "/with/key/" + IFTTTkey ); 
+     http.end(); //Free the resources
+  }
   
   if (sensor.waitForCompletion()) {
     lux = sensor.read();    
