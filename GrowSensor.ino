@@ -164,7 +164,8 @@ if (WiFi.status() == WL_CONNECTED) {
   uint32_t salt = readSalt();
   uint16_t soil = readSoil();
   if (soil <= LowMoistVal){
-     http.begin(String("https://maker.ifttt.com/trigger/") + IFTTTLowMoistNm + "/with/key/" + IFTTTkey ); 
+     http.begin(String("https://maker.ifttt.com/trigger/") + IFTTTLowMoistNm + "/with/key/" + IFTTTkey); 
+     int httpCode = http.GET();
      http.end(); //Free the resources
   }
   sensor.startConversion(); //light sensor
@@ -177,7 +178,8 @@ if (WiFi.status() == WL_CONNECTED) {
   }
   bat=bat/3;
   if (bat <= LowBatVal){
-     http.begin(String("https://maker.ifttt.com/trigger/") + IFTTTLowBattNm + "/with/key/" + IFTTTkey ); 
+     http.begin(String("https://maker.ifttt.com/trigger/") + IFTTTLowBattNm + "/with/key/" + IFTTTkey); 
+     int httpCode = http.GET();
      http.end(); //Free the resources
   }
   
