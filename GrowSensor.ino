@@ -73,6 +73,14 @@ void sleepHandler(Button2 &b)
     esp_deep_sleep_start();
 }
 
+void DeepSleep(){
+  esp_sleep_pd_config(ESP_PD_DOMAIN_RTC_SLOW_MEM, ESP_PD_OPTION_OFF);   // poweroff RTC_SLOW_MEM hibernate mode
+  esp_sleep_pd_config(ESP_PD_DOMAIN_RTC_FAST_MEM, ESP_PD_OPTION_OFF);   // poweroff RTC_FAST_MEM hibernate mode
+  esp_sleep_pd_config(ESP_PD_DOMAIN_RTC_PERIPH, ESP_PD_OPTION_OFF);     // poweroff RTC_PERIPH hibernate mode
+  esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_MIN_FACTOR);
+  esp_deep_sleep_start(); //Enter in DeepSleep
+}
+
 void setup()
 {
     Serial.begin(115200);
@@ -203,10 +211,7 @@ if (WiFi.status() == WL_CONNECTED) {
     Serial.println("Error on HTTP request");
   }*/
   http.end(); //Free the resources
-  esp_sleep_pd_config(ESP_PD_DOMAIN_RTC_SLOW_MEM, ESP_PD_OPTION_OFF);   // poweroff RTC_SLOW_MEM hibernate mode
-  esp_sleep_pd_config(ESP_PD_DOMAIN_RTC_FAST_MEM, ESP_PD_OPTION_OFF);   // poweroff RTC_FAST_MEM hibernate mode
-  esp_sleep_pd_config(ESP_PD_DOMAIN_RTC_PERIPH, ESP_PD_OPTION_OFF);     // poweroff RTC_PERIPH hibernate mode
-  esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_MIN_FACTOR);
-  esp_deep_sleep_start(); //Enter in DeepSleep
+    DeepSleep();
 }
+DeepSleep(); //if disconnected go in deepsleep
 }
