@@ -22,6 +22,7 @@
 #define USER_BUTTON 35
 
 #define TIME_TO_SLEEP 15                 //Time ESP32 will go to sleep (in minuts) between each reading
+bool rdSalt = false;                    //Enable/Disable Salt reading
 String apiKey = "xxxxx";     //Enter your Write API key from ThingSpeak
 String IFTTTkey = "xxxx"; // Enter your IFTTT Key
 String IFTTTLowMoistNm = "xxx";      //Enter the IFTTT event name for low moisture
@@ -169,7 +170,10 @@ if (WiFi.status() == WL_CONNECTED) {
   float h = dht.readHumidity();
   float t = dht.readTemperature();
   uint16_t lux;
-  uint32_t salt = readSalt();
+  uint32_t salt = 0;
+  if (rdSalt == true){
+    salt = readSalt();
+  }
   uint16_t soil = readSoil();
   if (soil <= LowMoistVal){
      http.begin(String("https://maker.ifttt.com/trigger/") + IFTTTLowMoistNm + "/with/key/" + IFTTTkey); 
