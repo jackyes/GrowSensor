@@ -202,8 +202,12 @@ if (WiFi.status() == WL_CONNECTED) {
   }
   if ((lux != 8180) &&(lux >= 0)){
     http.begin(String("https://api.thingspeak.com/update?api_key=") + apiKey + "&field1=" + t + "&field2=" + h + "&field3=" + lux + "&field4=" + salt + "&field5=" + soil + "&field6=" + bat); //lux data ok
+    int httpCode = http.GET();
+    http.end(); //Free the resources
   } else {
     http.begin(String("https://api.thingspeak.com/update?api_key=") + apiKey + "&field1=" + t + "&field2=" + h + "&field4=" + salt + "&field5=" + soil + "&field6=" + bat); //No lux data
+    int httpCode = http.GET();
+    http.end(); //Free the resources
   }
 
   int httpCode = http.GET(); 
